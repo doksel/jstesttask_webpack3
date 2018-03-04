@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import selectProject from "./config.js";
 
 class App extends React.Component{
     constructor(props) {
@@ -13,14 +14,27 @@ class App extends React.Component{
             btnClassName: "btn btn-success"
         };
         
+        this.onCreateSelect = this.onCreateSelect.bind(this);
         this.onChangeButton = this.onChangeButton.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    onCreateSelect(){
+        var select = document.querySelector("select");
+        console.log(selectProject);
+        for (let i=0; i<selectProject.length; i++){
+            if(select.options.length <= selectProject.length){
+            var option = document.createElement("option");
+            option.innerHTML = selectProject[i];
+            select.appendChild(option);
+            }
+        }
+    }
+    
     onChangeButton(e) {
-        var val = e.target.value;
-        let btnValue = (this.state.btnValue === "Start")?"Stop":"Start";
-        let btnClassName = (this.state.btnClassName === "btn btn-success")?"btn btn-danger":"btn btn-success";
+        const val = e.target.value;
+        const btnValue = (this.state.btnValue === "Start")?"Stop":"Start";
+        const btnClassName = (this.state.btnClassName === "btn btn-success")?"btn btn-danger":"btn btn-success";
         this.setState({btnValue: btnValue, btnClassName: btnClassName});
     }
 
@@ -29,11 +43,10 @@ class App extends React.Component{
         var task = this.refs.nameTask.value;
         var project = this.refs.nameProject.value;
         this.setState({nameProject: project, nameTask: task});
-        // alert("Имя: " + task + ' ' + project);
 
-        var articleDiv = document.querySelector("div.article");
-        var elem = document.createElement("h3");
-        var elemText = document.createTextNode(task + ' ' + project);
+        const articleDiv = document.querySelector("div.article");
+        const elem = document.createElement("h3");
+        let elemText = document.createTextNode(task + ' ' + project);
         elem.appendChild(elemText);
         articleDiv.appendChild(elem);
       }
@@ -46,12 +59,8 @@ class App extends React.Component{
                         <input className = "form-control" type="text" defaultValue="" ref="nameTask"  placeholder="What are your working on? "/>
                     </div>
                     <div className="form-group">
-                        <select className = "form-control" ref="nameProject">
+                        <select className = "form-control" ref="nameProject" onClick={this.onCreateSelect}>
                             <option defaultValue>selest project</option>
-                            <option value = "timer">timer</option>
-                            <option value = "calculator">calculator</option>
-                            <option value = "game">game</option>
-                            <option value = "application">application</option>
                         </select>
                     </div>
                     <div className="form-group">

@@ -1,8 +1,8 @@
 const selectProject = 
 [
-    "selest project", 
     "timer", 
     "calculator", 
     "game", 
     "application"
 ]
+export default selectProject;
