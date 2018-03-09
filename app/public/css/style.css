@@ -1,8 +1,10 @@
 .container-fluid{
     margin: 5px;
 }
-.showTimer{
+.showTimer, .time{
     border: 1px solid black;
     height: 33px;
-    width: 100px;
+    width: 150px;
+    text-align: center;
+    line-height: 33px;
 }

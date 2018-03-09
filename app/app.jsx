@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
+import myTimer1 from "./public/js/myTimer.js";
 import selectProject from "./config.js";
 
 class App extends React.Component{
@@ -13,9 +15,10 @@ class App extends React.Component{
             btnValue: "Start",
             btnClassName: "btn btn-success"
         };
-        
+
         this.onCreateSelect = this.onCreateSelect.bind(this);
         this.onChangeButton = this.onChangeButton.bind(this);
+        this.myTimer = this.myTimer.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -36,6 +39,22 @@ class App extends React.Component{
         const btnValue = (this.state.btnValue === "Start")?"Stop":"Start";
         const btnClassName = (this.state.btnClassName === "btn btn-success")?"btn btn-danger":"btn btn-success";
         this.setState({btnValue: btnValue, btnClassName: btnClassName});
+        this.myTimer();
+    }
+
+    myTimer(){
+        var ss = 0, mm = 0, hh = 0;
+        clearInterval(timerId);
+        const screenTimer = document.querySelector("div .showTimer");
+        var timerId = setInterval(() => {
+            if(ss<=60){
+                screenTimer.innerHTML = hh + " h " + mm + " min " + ss + " sec";
+                if(mm<=2){
+                }else{ss = 0; mm = 0; hh++}
+            }else{ss = 0; mm++;}
+            ss++;
+        }, 100);
+        if (this.state.btnValue === "Stop") clearInterval(timerId);
     }
 
     handleSubmit(e) {
@@ -44,12 +63,15 @@ class App extends React.Component{
         var project = this.refs.nameProject.value;
         this.setState({nameProject: project, nameTask: task});
 
-        const articleDiv = document.querySelector("div.article");
-        const elem = document.createElement("h3");
-        let elemText = document.createTextNode(task + ' ' + project);
-        elem.appendChild(elemText);
-        articleDiv.appendChild(elem);
-      }
+        if(this.state.btnValue === "Start"){
+            const articleDiv = document.querySelector("div.article");
+            const elem = document.createElement("h3");
+            let elemText = document.createTextNode(task + ' ' + project);
+            elem.appendChild(elemText);
+            articleDiv.appendChild(elem);
+            this.setState({nameProject: "", nameTask: ""});
+        }
+    }
 
     render() {
         return(
@@ -65,6 +87,9 @@ class App extends React.Component{
                     </div>
                     <div className="form-group">
                         <div className="showTimer"></div>
+                    </div>
+                    <div className="form-group">
+                        <span className="hh"></span>:<span className="mm"></span>:<span className="ss"></span>
                     </div>
                     <button type="submit" onClick={this.onChangeButton} className={this.state.btnClassName}>{this.state.btnValue}</button> 
                 </form>

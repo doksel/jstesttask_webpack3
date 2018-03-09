@@ -1,7 +1,7 @@
 const path = require('path');
  
 module.exports = {
-    entry: "./app/app.jsx", 
+    entry: "./app/app2.jsx", 
     output:{
         path: path.resolve(__dirname, './public'),    
         publicPath: '/public/',
