@@ -5,12 +5,11 @@ class OptionsSelect extends React.Component{
         super(props);
         this.state = { optionsSelect: this.props.optionsSelect, value: ""};
         this.onChange = this.onChange.bind(this);
-
     }
     
         onChange(e) {
-            var val = e.target.value;
-            this.setState({value: val});
+            var value = e.target.value;
+            this.setState({value});
         }
     
     render() {

@@ -8,8 +8,8 @@ class NameTaskInput extends React.Component{
     }
 
     onChange(e) {
-        var val = e.target.value;
-        this.setState({value: val});
+        var value = e.target.value;
+        this.setState({value});
     }
 
     render() {

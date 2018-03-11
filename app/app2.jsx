@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import propsValue from "./config.js";
 import OptionsSelect from "./components/optionsSelect.jsx";
 import NameTaskInput from "./components/nameTaskInput.jsx";
-import Timer from "./components/timer.jsx";
 import Button from "./components/button.jsx";
 
 class App extends React.Component{
@@ -15,13 +14,22 @@ class App extends React.Component{
             nameTask: "",
             timeSpent: "",
             timeRange: "",
+
             btnValue: "Start",
-            btnClassName: "btn btn-success"
+            btnClassName: "btn btn-success",
+            valueTimer: "",
+
+            running: false,
+            elapsed: 0,
+            lastTick: 0
         };
 
         this.onChangeButton = this.onChangeButton.bind(this);
-        this.myTimer = this.myTimer.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleStart = this.handleStart.bind(this);
+        this.handlePause = this.handlePause.bind(this);
+        this.handleStop = this.handleStop.bind(this);
+        this.tick = this.tick.bind(this);
     }
 
     onChangeButton(e) {
@@ -29,22 +37,55 @@ class App extends React.Component{
         const btnValue = (this.state.btnValue === "Start")?"Stop":"Start";
         const btnClassName = (this.state.btnClassName === "btn btn-success")?"btn btn-danger":"btn btn-success";
         this.setState({btnValue: btnValue, btnClassName: btnClassName});
-        this.Timer.startstop();
+        (this.state.btnValue === "Start")?this.handleStart():this.handleStop();
     }
 
-    myTimer(){
-        var ss = 0, mm = 0, hh = 0;
-        clearInterval(timerId);
+    componentDidMount() {
+        this.interval = setInterval(this.tick, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    tick() {
+        if(this.state.running) {
+            let now = Date.now();
+            let diff = now - this.state.lastTick;
+            this.setState({
+                elapsed: this.state.elapsed + diff,
+                lastTick: now
+            });
+        }
+    }
+
+    handleStart() {
+        this.setState({
+            running: true,
+            lastTick: Date.now()
+        });
+    }
+
+    handlePause() {
+        this.setState({ running: false })
+    }
+
+    handleStop() {
         const screenTimer = document.querySelector("div .showTimer");
-        var timerId = setInterval(() => {
-            if(ss<=60){
-                screenTimer.innerHTML = hh + " h " + mm + " min " + ss + " sec";
-                if(mm<=2){
-                }else{ss = 0; mm = 0; hh++}
-            }else{ss = 0; mm++;}
-            ss++;
-        }, 100);
-        if (this.state.btnValue === "Stop") clearInterval(timerId);
+        this.setState({
+            running: false,
+            elapsed: 0,
+            lastTick: 0,
+            valueTimer: screenTimer.innerHTML
+        })
+    }
+
+    format(msec) {
+        let sec = (Math.floor(msec / 1000)) % 60;
+        let min = Math.floor((msec / 1000) / 60);
+        let hour = Math.floor(min / 60);
+
+        return `${hour > 9 ? hour : '0' + hour} h ${min > 9 ? min : '0' + min} min ${sec > 9 ? sec : '0' + sec} sec`;
     }
 
     handleSubmit(e) {
@@ -56,7 +97,7 @@ class App extends React.Component{
         if(this.state.btnValue === "Start"){
             const articleDiv = document.querySelector("div.article");
             const elem = document.createElement("h3");
-            let elemText = document.createTextNode(task + ' ' + project);
+            let elemText = document.createTextNode(task + ' ' + project + ' ' + this.state.valueTimer);
             elem.appendChild(elemText);
             articleDiv.appendChild(elem);
             this.setState({nameProject: "", nameTask: ""});
@@ -64,6 +105,8 @@ class App extends React.Component{
     }
 
     render() {
+        let time = this.format(this.state.elapsed);
+
         return(
             <div className="container-fluid">
                 <form className = "form-inline" onSubmit={this.handleSubmit}>
@@ -71,16 +114,12 @@ class App extends React.Component{
                         <NameTaskInput ref="nameTask" />
                     </div>
                     <div className="form-group">
-                        <OptionsSelect ref="nameProject" value="" optionsSelect={propsValue.optionsSelect}/>
+                        <OptionsSelect ref="nameProject" optionsSelect={propsValue.optionsSelect}/>
                     </div>
                     <div className="form-group">
-                        <div className="showTimer"></div>
+                        <div className="showTimer">{time}</div>
                     </div>
-                    <div className="form-group">
-                        <Timer />
-                    </div>
-                    <button type="submit" onClick={this.onChangeButton} className={this.state.btnClassName}>{this.state.btnValue}</button> 
-                    {/* <Button/> */}
+                    <Button type="submit" onClick={this.onChangeButton} className={this.state.btnClassName}>{this.state.btnValue}</Button> 
                 </form>
                 <span className="glyphicon glyphicon-play"></span>
                 <div className="article"></div>

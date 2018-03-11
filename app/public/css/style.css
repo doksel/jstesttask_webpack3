@@ -1,10 +1,32 @@
 .container-fluid{
     margin: 5px;
 }
-.showTimer, .time{
+.showTimer{
     border: 1px solid black;
     height: 33px;
     width: 150px;
     text-align: center;
     line-height: 33px;
 }
+
+/* -----------------------when off-line-------------------- */
+/* .btn, input, select{
+    border: 1px solid black;
+    border-radius: 3px;
+    height: 33px;
+    width: 150px;
+    text-align: center;
+    line-height: 33px;
+    margin: 3px;   
+}
+.btn-success{
+    background-color: green;
+    color: white;
+}
+.btn-danger{
+    background-color:red;
+    color: black;
+}
+div{
+    display: inline-block;
+} */
