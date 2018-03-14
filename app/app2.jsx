@@ -5,6 +5,10 @@ import propsValue from "./config.js";
 import OptionsSelect from "./components/optionsSelect.jsx";
 import NameTaskInput from "./components/nameTaskInput.jsx";
 import Button from "./components/button.jsx";
+import Article from "./components/article.jsx";
+
+import {connect} from "react-redux";
+import setTimeSpentAction from "./actions/action";
 
 class App extends React.Component{
     constructor(props) {
@@ -21,7 +25,9 @@ class App extends React.Component{
 
             running: false,
             elapsed: 0,
-            lastTick: 0
+            lastTick: 0,
+            startTick: 0,
+            endTick: 0
         };
 
         this.onChangeButton = this.onChangeButton.bind(this);
@@ -54,7 +60,7 @@ class App extends React.Component{
             let diff = now - this.state.lastTick;
             this.setState({
                 elapsed: this.state.elapsed + diff,
-                lastTick: now
+                lastTick: now,
             });
         }
     }
@@ -62,7 +68,8 @@ class App extends React.Component{
     handleStart() {
         this.setState({
             running: true,
-            lastTick: Date.now()
+            lastTick: Date.now(),
+            startTick: new Date().getHours()+'.'+new Date().getMinutes()
         });
     }
 
@@ -76,7 +83,9 @@ class App extends React.Component{
             running: false,
             elapsed: 0,
             lastTick: 0,
-            valueTimer: screenTimer.innerHTML
+            valueTimer: screenTimer.innerHTML,
+            endTick: new Date().getHours()+'.'+new Date().getMinutes()
+
         })
     }
 
@@ -94,15 +103,37 @@ class App extends React.Component{
         var project = this.refs.nameProject.state.value;
         this.setState({nameProject: project, nameTask: task});
 
+        // if(this.state.btnValue === "Start"){
+        //     this.props.setTimeSpentFunction(this.state.valueTimer)
+        //     const articleDiv = document.querySelector("div.article");
+        //     const elem = document.createElement("p");
+        //     let elemText = document.createTextNode(this.state.nameTask + ' ' + this.state.nameProject + ' ' + this.state.valueTimer +' '+this.state.startTick+'-'+this.state.endTick);
+        //     elem.appendChild(elemText);
+        //     articleDiv.appendChild(elem);
+        //     this.setState({nameProject: "", nameTask: ""});
+
+        // }
         if(this.state.btnValue === "Start"){
+            let elemsForMap={
+                nameTask: this.state.nameTask,
+                nameProject: this.state.nameProject,
+                timeSpent: this.state.timeSpent,
+                valueTimer: this.state.valueTimer,
+                diffTick: this.state.startTick+'-'+this.state.endTick,
+            }; 
+            this.props.setTimeSpentFunction(this.state.valueTimer)
             const articleDiv = document.querySelector("div.article");
-            const elem = document.createElement("h3");
-            let elemText = document.createTextNode(task + ' ' + project + ' ' + this.state.valueTimer);
-            elem.appendChild(elemText);
-            articleDiv.appendChild(elem);
-            this.setState({nameProject: "", nameTask: ""});
+            for (var key in elemsForMap) {
+                const arcticleDiv = document.createElement("div");
+                const elem = document.createElement("span");
+                let elemText = document.createTextNode(elemsForMap[key]);
+                elem.appendChild(elemText);
+                articleDiv.appendChild(elem);
         }
     }
+}
+
+    
 
     render() {
         let time = this.format(this.state.elapsed);
@@ -121,9 +152,32 @@ class App extends React.Component{
                     </div>
                     <Button type="submit" onClick={this.onChangeButton} className={this.state.btnClassName}>{this.state.btnValue}</Button> 
                 </form>
-                <span className="glyphicon glyphicon-play"></span>
+                <hr/>
                 <div className="article"></div>
+                <Article 
+                    task={this.props.task} 
+                    project={this.props.project} 
+                    timeSpent={this.props.timeSpent} 
+                    setTimeSpent={this.props.setTimeSpentFunction}
+                />
             </div>);
     }
 }
-ReactDOM.render(<App />, document.getElementById("app"))
+
+function mapStateToProps(state){
+    return {
+        task: state.userInfo.task,
+        project: state.userInfo.project,
+        timeSpent: state.userInfo.timeSpent,
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return{
+        setTimeSpentFunction: timeSpent => {
+            dispatch(setTimeSpentAction(timeSpent))
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(App);
+// ReactDOM.render(<App />, document.getElementById("app"))

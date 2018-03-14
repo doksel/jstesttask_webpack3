@@ -8,6 +8,10 @@
     text-align: center;
     line-height: 33px;
 }
+.span{
+    width: 200px;
+    overflow-x:hidden;
+}
 
 /* -----------------------when off-line-------------------- */
 /* .btn, input, select{
