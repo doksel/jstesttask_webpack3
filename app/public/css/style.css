@@ -8,9 +8,15 @@
     text-align: center;
     line-height: 33px;
 }
-.span{
-    width: 200px;
+.spanElem{
+    width: 180px;
+    height: 100%;
     overflow-x:hidden;
+    display: inline-block;
+    border: 1px solid black;
+    text-align: center;
+    margin: 5px;
+    padding: 5px;
 }
 
 /* -----------------------when off-line-------------------- */

@@ -1,9 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
+import MongoClient from "mongodb";
 
 import * as db from "./DataBaseUtils.js";
 db.setUpConnection();
 const app = express();
+const db;
 
 app.use(bodyParser.json());
 

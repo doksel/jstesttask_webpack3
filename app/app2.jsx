@@ -14,6 +14,7 @@ class App extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
+            title: "",
             nameProject: "",
             nameTask: "",
             timeSpent: "",
@@ -67,6 +68,7 @@ class App extends React.Component{
 
     handleStart() {
         this.setState({
+            title: new Date().toLocaleString("en-US", {month: 'short',day: 'numeric', weekday: 'short'}),
             running: true,
             lastTick: Date.now(),
             startTick: new Date().getHours()+'.'+new Date().getMinutes()
@@ -103,18 +105,9 @@ class App extends React.Component{
         var project = this.refs.nameProject.state.value;
         this.setState({nameProject: project, nameTask: task});
 
-        // if(this.state.btnValue === "Start"){
-        //     this.props.setTimeSpentFunction(this.state.valueTimer)
-        //     const articleDiv = document.querySelector("div.article");
-        //     const elem = document.createElement("p");
-        //     let elemText = document.createTextNode(this.state.nameTask + ' ' + this.state.nameProject + ' ' + this.state.valueTimer +' '+this.state.startTick+'-'+this.state.endTick);
-        //     elem.appendChild(elemText);
-        //     articleDiv.appendChild(elem);
-        //     this.setState({nameProject: "", nameTask: ""});
-
-        // }
         if(this.state.btnValue === "Start"){
             let elemsForMap={
+                title:  this.state.title,
                 nameTask: this.state.nameTask,
                 nameProject: this.state.nameProject,
                 timeSpent: this.state.timeSpent,
@@ -123,15 +116,22 @@ class App extends React.Component{
             }; 
             this.props.setTimeSpentFunction(this.state.valueTimer)
             const articleDiv = document.querySelector("div.article");
-            for (var key in elemsForMap) {
+            const title = document.createElement("h3");
+            const elemPlay = document.createElement("span");
+            const elemBr = document.createElement("br");
+            for (let key in elemsForMap) {
                 const arcticleDiv = document.createElement("div");
                 const elem = document.createElement("span");
                 let elemText = document.createTextNode(elemsForMap[key]);
                 elem.appendChild(elemText);
+                elem.className = "spanElem";
                 articleDiv.appendChild(elem);
+            };
+            elemPlay.className="glyphicon glyphicon-play spanElem";
+            articleDiv.appendChild(elemPlay);
+            articleDiv.appendChild(elemBr);
         }
     }
-}
 
     
 
