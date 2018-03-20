@@ -20,3 +20,5 @@ app.post('/notes/:id',(req,res)=>{
 const server = app.listen(8080,()=>{
     console.log('Server running');
 });
+
+// mongod --storageEngine=mmapv1 --dbpath C:/mongodb/data/db

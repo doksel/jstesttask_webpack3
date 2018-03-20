@@ -17,8 +17,6 @@ class App extends React.Component{
             title: "",
             nameProject: "",
             nameTask: "",
-            timeSpent: "",
-            timeRange: "",
 
             btnValue: "Start",
             btnClassName: "btn btn-success",
@@ -110,11 +108,10 @@ class App extends React.Component{
                 title:  this.state.title,
                 nameTask: this.state.nameTask,
                 nameProject: this.state.nameProject,
-                timeSpent: this.state.timeSpent,
                 valueTimer: this.state.valueTimer,
                 diffTick: this.state.startTick+'-'+this.state.endTick,
             }; 
-            this.props.setTimeSpentFunction(this.state.valueTimer)
+            // this.props.setTimeSpentFunction(this.state.valueTimer)
             const articleDiv = document.querySelector("div.article");
             const title = document.createElement("h3");
             const elemPlay = document.createElement("span");
@@ -154,12 +151,12 @@ class App extends React.Component{
                 </form>
                 <hr/>
                 <div className="article"></div>
-                <Article 
+                {/* <Article 
                     task={this.props.task} 
                     project={this.props.project} 
                     timeSpent={this.props.timeSpent} 
                     setTimeSpent={this.props.setTimeSpentFunction}
-                />
+                /> */}
             </div>);
     }
 }
